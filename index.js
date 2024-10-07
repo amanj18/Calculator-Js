@@ -19,7 +19,11 @@ function clearLast() {
         updateDisplay(currentInput || "0");
     } else if (operator !== "") {
         operator = "";
+        currentInput = previousInput; 
         updateDisplay(previousInput);
+    } else if (previousInput !== "") {
+        previousInput = previousInput.slice(0, -1);
+        updateDisplay(previousInput || "0");
     }
 }
 
@@ -29,13 +33,15 @@ function appendNumber(number) {
 }
 
 function chooseOperator(op) {
-    if (currentInput === "") return;
-    if (previousInput !== "") {
+    if (currentInput === "" && previousInput === "") return;
+    if (previousInput !== "" && currentInput !== "") {
         calculate();
     }
     operator = op;
-    previousInput = currentInput;
-    currentInput = "";
+    if (currentInput !== "") {
+        previousInput = currentInput;
+        currentInput = "";
+    }
     updateDisplay(op);
 }
 
@@ -85,8 +91,7 @@ document.querySelectorAll(".control-item").forEach(e => {
             calculate();
         } else if (value === "C") {
             clearLast();
-        }
-        else{
+        } else {
             clearAll();
         }
     });
